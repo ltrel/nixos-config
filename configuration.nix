@@ -9,6 +9,8 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./impermanence-config.nix
+      ./users.nix
+      ./pkgset.nix
     ];
   
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -29,11 +31,17 @@
   time.timeZone = "Australia/Melbourne";
   time.hardwareClockInLocalTime = true;
 
-  # Enable the X11 windowing system.
+  ## Enable the X11 windowing system.
   services.xserver.enable = true;
-  # Enable the KDE Plasma Desktop Environment.
+  ## Enable the KDE Plasma Desktop Environment.
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
+
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
   # Enable touchpad support (enabled default in most desktopManager).
@@ -49,29 +57,7 @@
   # Accelerometer support
   hardware.sensor.iio.enable = true;
 
-  users.mutableUsers = false;
-  users.users.root.passwordFile = "/persist/passwords/root";
-  users.users.lia = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-    passwordFile = "/persist/passwords/lia";
-  };
-
   security.sudo.wheelNeedsPassword = false;
-
-  environment.systemPackages = with pkgs; [
-    git
-    neovim
-    tree
-    htop
-    wget
-    ranger
-    neofetch
-    nixos-option
-    firefox-wayland
-    discord
-    maliit-keyboard
-  ];
 
   # DO NOT MODIFY without checking release notes
   system.stateVersion = "23.05";
